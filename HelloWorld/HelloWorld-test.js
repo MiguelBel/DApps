@@ -9,18 +9,21 @@ var web3 = new Web3(provider)
 var an_adress = web3.eth.accounts[0]
 
 describe('HelloWorld', function() {
-  this.timeout(0);
+  this.timeout(10000);
 
-  it('greets the caller', function() {
+  it('greets the caller', function(done) {
     expectedGreeting = "Hello World from Smart Contracts"
 
-    deployHelloWorldContract().then(function(_error, deployedContract){
-      assert.equal(expectedGreeting, contract.hi.call())
-    });
+      deployHelloWorldContract(function(error, deployedContract){
+        if(deployedContract.address) {
+          assert.equal(expectedGreeting, deployedContract.hi.call())
+          done()
+        }
+      })
   });
 });
 
-var deployHelloWorldContract = function() {
+var deployHelloWorldContract = function(callback) {
   var filename = "HelloWorld.sol"
   var contractSource = readContract(filename)
   var compiledContracts = solc.compile(contractSource)
@@ -29,13 +32,11 @@ var deployHelloWorldContract = function() {
   var abi = JSON.parse(contract.interface)
   var HelloWorldContract = web3.eth.contract(abi)
 
-  return new Promise(function(){
-    HelloWorldContract.new({
-      from: an_adress,
-      data: contract.bytecode,
-      gas: 3000000
-    })
-  });
+  HelloWorldContract.new({
+    from: an_adress,
+    data: contract.bytecode,
+    gas: 3000000
+  }, callback)
 }
 
 var readContract = function(filename) {
