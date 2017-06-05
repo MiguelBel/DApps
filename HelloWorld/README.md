@@ -1,4 +1,6 @@
-### Hello World from Smart Contracts dapp
+## Hello World from Smart Contracts dapp
+
+### Setup
 
 Meet the dependencies:
 
@@ -19,3 +21,13 @@ and in other tab/window run the script:
 ```
 node execute.js
 ```
+
+### Tests
+
+Run:
+
+```npm test```
+
+### Usage
+
+You can deploy it through the tests.
