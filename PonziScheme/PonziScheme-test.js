@@ -205,7 +205,8 @@ describe("PonziScheme", function(){
   var setDeposit = function(data, address, amount) {
     return new Promise(function(resolve, reject) {
       try {
-        data.contract.deposit({
+        web3.eth.sendTransaction({
+          to: data.contract.address,
           from: address,
           value: web3.toWei(amount, "ether")
         });

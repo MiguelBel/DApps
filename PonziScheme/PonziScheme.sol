@@ -9,7 +9,7 @@ contract PonziScheme {
     round = 1;
   }
 
-  function deposit() payable {
+  function() payable {
     uint startingLimit = 1 ether;
 
     if(round == 1) {
