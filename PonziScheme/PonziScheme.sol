@@ -1,19 +1,19 @@
 pragma solidity ^0.4.11;
 
 contract PonziScheme {
-  uint round;
-  address lastDepositor;
-  uint lastDepositorAmount;
+  uint public round;
+  address public lastDepositor;
+  uint public lastDepositorAmount;
+  uint public startingAmount;
 
-  function PonziScheme() {
+  function PonziScheme(uint _startingAmount) {
     round = 1;
+    startingAmount = _startingAmount;
   }
 
   function() payable {
-    uint startingLimit = 1 ether;
-
     if(round == 1) {
-      if(msg.value != startingLimit) {
+      if(msg.value != startingAmount) {
         throw;
       }
     } else {
@@ -26,6 +26,14 @@ contract PonziScheme {
     lastDepositor = msg.sender;
 
     increaseRound();
+  }
+
+  function nextAmount() returns (uint amount){
+    if(round == 1) {
+      return startingAmount;
+    } else {
+      return lastDepositorAmount * 2;
+    }
   }
 
   function checkAmount(uint amount) private {

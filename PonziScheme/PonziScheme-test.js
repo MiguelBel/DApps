@@ -6,7 +6,9 @@ var fs = require("fs")
 var testrpcHost = "http://localhost:8545"
 var provider = new Web3.providers.HttpProvider(testrpcHost)
 var web3 = new Web3(provider)
-var an_adress = web3.eth.accounts[0]
+var an_address = web3.eth.accounts[0]
+
+var startingAmountInEth = web3.toWei(1, 'ether')
 
 describe("PonziScheme", function(){
   this.timeout(10000);
@@ -192,6 +194,36 @@ describe("PonziScheme", function(){
       then(data => done())
   });
 
+  it('the contract should return the starting amount when there are not deposits', function(done){
+    deployPonziSchemeContract(an_address).
+
+      then(data => assert.equal(web3.fromWei(data.contract.nextAmount.call(), "ether"), web3.fromWei(startingAmountInEth, "ether"))).
+      then(data => done())
+  });
+
+  it('the contract should say what the next deposit should be when there are deposits', function(done){
+    var firstDeposit = {
+      address: web3.eth.accounts[0],
+      amountInEther: 1
+    }
+    var secondDeposit = {
+      address: web3.eth.accounts[1],
+      amountInEther: 2
+    }
+    var thirdDeposit = {
+      address: web3.eth.accounts[2],
+      amountInEther: 4
+    }
+
+    deployPonziSchemeContract(firstDeposit.address).
+
+      then(data => setDeposit(data, firstDeposit.address, firstDeposit.amountInEther)).
+      then(data => setDeposit(data, secondDeposit.address, secondDeposit.amountInEther)).
+      then(data => setDeposit(data, thirdDeposit.address, thirdDeposit.amountInEther)).
+      then(data => assert.equal(web3.fromWei(data.contract.nextAmount.call(), "ether"), 8)).
+      then(data => done())
+  });
+
   var getInitialBalance = function(data, address) {
     return new Promise(function(resolve, reject) {
       estimatedBalanceInEther(address, function(initialBalance){
@@ -250,7 +282,7 @@ var deployPonziSchemeContract = function(address) {
   var facedContract = web3.eth.contract(abi)
 
   return new Promise(function(resolve, reject) {
-    facedContract.new(address, {
+    facedContract.new(startingAmountInEth, {
       from: address,
       data: contract.bytecode,
       gas: 3000000
