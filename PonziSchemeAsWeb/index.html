@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethereum Ponzi Scheme</title>
+
+  <style>
+    span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <p>
+      Duplicate your money by sending it to: <span id="address"></span>.
+      <br />
+      The next amount should be: <span id="nextAmount"></span>.
+      <br />
+      <br />
+      <button id="duplicate">Duplicate your money!</button>
+      <span id="loading" style="display:none;">Waiting for your transaction to be mined...</span>
+    </p>
+  </div>
+
+  <script src="web3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    // Configuration
+    var endpoint = "http://localhost:8545"
+    var contractAddress = '0xdb9991ba60a929e8817aa511fe5fb6703bc34797';
+    var abi = '[{"constant":true,"inputs":[],"name":"round","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"nextAmount","outputs":[{"name":"amount","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"startingAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"lastDepositorAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"lastDepositor","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[{"name":"_startingAmount","type":"uint256"}],"payable":false,"type":"constructor"},{"payable":true,"type":"fallback"}]'
+
+    // Methods definition
+    web3 = new Web3(new Web3.providers.HttpProvider(endpoint));
+
+    var getContract = function(contractAddress, abi) {
+      var contract = web3.eth.contract(JSON.parse(abi));
+      return contract.at(contractAddress);
+    }
+
+    var showContractAddress = function(contract) {
+      var addressContainer = document.getElementById("address");
+      addressContainer.innerHTML = contract.address;
+    }
+
+    var updateNextAmount = function(contract) {
+      var amountInWei = contract.nextAmount.call();
+      var nextAmount = web3.fromWei(amountInWei, "ether");
+      var nextAmountContainer = document.getElementById("nextAmount");
+      nextAmountContainer.innerHTML = nextAmount;
+    }
+
+    var setInitialState = function(contractInstance) {
+      showContractAddress(contractInstance);
+      updateNextAmount(contractInstance);
+    }
+
+    var getTransactionReceiptMined = function (txnHash, interval) {
+        var transactionReceiptAsync;
+        interval = interval ? interval : 500;
+        transactionReceiptAsync = function(txnHash, resolve, reject) {
+            web3.eth.getTransactionReceipt(txnHash, (error, receipt) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (receipt == null) {
+                        setTimeout(function () {
+                            transactionReceiptAsync(txnHash, resolve, reject);
+                        }, interval);
+                    } else {
+                        resolve(receipt);
+                    }
+                }
+            });
+        };
+
+        if (Array.isArray(txnHash)) {
+            var promises = [];
+            txnHash.forEach(function (oneTxHash) {
+                promises.push(web3.eth.getTransactionReceiptMined(oneTxHash, interval));
+            });
+            return Promise.all(promises);
+        } else {
+            return new Promise(function (resolve, reject) {
+                    transactionReceiptAsync(txnHash, resolve, reject);
+                });
+        }
+    };
+
+    var showLoadingAlert = function() {
+      var loadingAlert = document.getElementById("loading");
+      loadingAlert.style = 'display: block;';
+    }
+
+    var hideLoadingAlert = function() {
+      var loadingAlert = document.getElementById("loading");
+      loadingAlert.style = 'display: none;'
+    }
+
+    var contribute = function() {
+      web3.eth.sendTransaction({
+        from: web3.eth.accounts[0],
+        to: contractAddress,
+        value: contractInstance.nextAmount.call()
+      }, function(error, txReference){
+        if(txReference) {
+          showLoadingAlert();
+          getTransactionReceiptMined(txReference).then(function(){
+            hideLoadingAlert();
+
+            updateNextAmount(contractInstance);
+          });
+        }
+      });
+    }
+
+    // Setup and calls
+    var contractInstance = getContract(contractAddress, abi);
+
+    setInitialState(contractInstance);
+
+    var duplicateButton = document.getElementById("duplicate");
+    duplicateButton.addEventListener("click", contribute);
+  </script>
+</body>
+</html>

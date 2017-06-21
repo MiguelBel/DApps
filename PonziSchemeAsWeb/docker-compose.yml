@@ -1,0 +1,23 @@
+app:
+  build: .
+  ports:
+    - "9000:9000"
+  volumes:
+    - ".:/app"
+  links:
+    - testrpc
+  command: python -m SimpleHTTPServer 9000
+
+deploy:
+  build: deploy/
+  links:
+    - testrpc
+  volumes:
+    - "./deploy:/deploy"
+    - "/deploy/node_modules"
+
+testrpc:
+  image: harshjv/testrpc
+  ports:
+    - "8545:8545"
+  command: testrpc --mnemonic="such shoulder essay hire angle suit slot merge help cricket air ill"
