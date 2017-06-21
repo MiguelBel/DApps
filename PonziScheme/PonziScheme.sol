@@ -5,10 +5,12 @@ contract PonziScheme {
   address public lastDepositor;
   uint public lastDepositorAmount;
   uint public startingAmount;
+  uint public nextAmount;
 
   function PonziScheme(uint _startingAmount) {
     round = 1;
     startingAmount = _startingAmount;
+    nextAmount = _startingAmount;
   }
 
   function() payable {
@@ -24,16 +26,9 @@ contract PonziScheme {
 
     lastDepositorAmount = msg.value;
     lastDepositor = msg.sender;
+    nextAmount = msg.value * 2;
 
     increaseRound();
-  }
-
-  function nextAmount() returns (uint amount){
-    if(round == 1) {
-      return startingAmount;
-    } else {
-      return lastDepositorAmount * 2;
-    }
   }
 
   function checkAmount(uint amount) private {
