@@ -3,30 +3,70 @@
 <head>
   <title>Ethereum Ponzi Scheme</title>
 
-  <style>
-    span {
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="css/tachyons.min.css">
 </head>
-<body>
-  <div>
-    <p>
-      Duplicate your money by sending it to: <span id="address"></span>.
-      <br />
-      The next amount should be: <span id="nextAmount"></span>.
-      <br />
-      <br />
-      <button id="duplicate">Duplicate your money!</button>
-      <span id="loading" style="display:none;">Waiting for your transaction to be mined...</span>
-    </p>
+<body class="w-100 sans-serif bg-white">
+  <div class="avenir tc-l ph3 ph4-ns pt4 pt5-ns">
+    <h1 class="f3 f2-m f-subheadline-l measure lh-title fw1 mt0">A Decentralized Ponzi Scheme</h1>
+    <h3>The next amount should be: <span id="nextAmount"></span> ETH.</h3>
+    <br>
+    <br>
+    <a href="#0" id="duplicate" class="f5 no-underline black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box mr4">
+      Duplicate your money!
+    </a>
+    <span id="loading" style="display:none;">Waiting for your transaction to be mined...</span>
+    <br>
+    <br>
+    <p class="f6">Contract address: <span id="address"></span>.</p>
   </div>
+  <br/>
+  <footer class="pv4 ph3 ph5-ns tc">
+    <a class="link dim gray dib h2 w2 br-100 mr3 " target="_blank" href="http://www.twitter.com/MiguelB93" title="">
+      <svg data-icon="twitter" viewBox="0 0 32 32" style="fill:currentcolor">
+        <title>twitter icon</title>
+        <path d="M2 4 C6 8 10 12 15 11 A6 6 0 0 1 22 4 A6 6 0 0 1 26 6 A8 8 0 0 0 31 4 A8 8 0 0 1 28 8 A8 8 0 0 0 32 7 A8 8 0 0 1 28 11 A18 18 0 0 1 10 30 A18 18 0 0 1 0 27 A12 12 0 0 0 8 24 A8 8 0 0 1 3 20 A8 8 0 0 0 6 19.5 A8 8 0 0 1 0 12 A8 8 0 0 0 3 13 A8 8 0 0 1 2 4"></path>
+      </svg>
+    </a>
+    <a class="link dim gray dib br-100 h2 w2 mr3 " target="_blank" href="https://github.com/MiguelBel/DApps/tree/master/PonziSchemeAsWeb" title="">
+      <svg data-icon="github" viewBox="0 0 32 32" style="fill:currentcolor">
+        <title>github icon</title>
+        <path d="M0 18 C0 12 3 10 3 9 C2.5 7 2.5 4 3 3 C6 3 9 5 10 6 C12 5 14 5 16 5 C18 5 20 5 22 6 C23 5 26 3 29 3 C29.5 4 29.5 7 29 9 C29 10 32 12 32 18 C32 25 30 30 16 30 C2 30 0 25 0 18 M3 20 C3 24 4 28 16 28 C28 28 29 24 29 20 C29 16 28 14 16 14 C4 14 3 16 3 20 M8 21 A1.5 2.5 0 0 0 13 21 A1.5 2.5 0 0 0 8 21 M24 21 A1.5 2.5 0 0 0 19 21 A1.5 2.5 0 0 0 24 21 z"></path>
+      </svg>
+    </a>
+  </footer>
+  <br/>
+  <br/>
+  <br/>
+  <div class="measure db center f5 f4-ns lh-copy">
+    <h3 class="f4">Ponzi what?</h3>
+    <p>In 1920, <a href="https://en.wikipedia.org/wiki/Charles_Ponzi">Charles Ponzi</a> had a "great" idea.
+    Offering to the investors an annual interest higher than the market.
+    To maintain the scam he planned to pay the first investors with the investments of the next.</p>
+    <p>That "logical" idea was not invented by Charles Ponzi and of course he was not the last one who did it.
+    Some examples are <a href="https://en.wikipedia.org/wiki/Bernard_Madoff">Bernard Madoff</a>, most social security systems and most of ICOs.
+    The idea is simple, who arrives last, lose.</p>
 
-  <script src="web3.min.js" type="text/javascript"></script>
+    <h3 class="f4">Why this?</h3>
+    <p>
+    A typical Ponzi Scheme is based in a "product" which serves as a disguise for scamming the investors.
+    <i>Why it should be like this?</i> A Ponzi Scheme is an scam because it tricks people into it. Is not a clear contract.
+    Making it in the Ethereum network makes it perfectly clear. If you put money, you run into the risk of no one putting money after you.
+    </p>
+
+    <h3 class="f4">When this ends?</h3>
+    <p>
+    In theory, it ends when the scam author runs with the money or the scam is discovered and the investors run with the money.
+    In the Ethereum network this things can't happen so it ends when no one wants to put money in (technically) and in theory when the next payout is higher than the circulating supply.
+    </p>
+
+    <h3 class="f4">What is sure?</h3>
+    <p>The sure thing is that in the long term, someone lose. It will be you?</p>
+  </div>
+  <script src="js/web3.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     // Configuration
     var endpoint = "http://localhost:8545"
-    var contractAddress = '0xdb9991ba60a929e8817aa511fe5fb6703bc34797';
+    var contractAddress = '0x2e4beb9af30c2a187959f109b2adc97f3ca4250b';
     var abi = '[{"constant":true,"inputs":[],"name":"round","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"nextAmount","outputs":[{"name":"amount","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"startingAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"lastDepositorAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"lastDepositor","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[{"name":"_startingAmount","type":"uint256"}],"payable":false,"type":"constructor"},{"payable":true,"type":"fallback"}]'
 
     // Methods definition
