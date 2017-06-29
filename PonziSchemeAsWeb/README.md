@@ -28,10 +28,16 @@ Contract address: 0xdb9991ba60a929e8817aa511fe5fb6703bc34797
 
 The contract address is 0xdb9991ba60a929e8817aa511fe5fb6703bc34797.
 
-Copy the contract address to the UI in the `index.html`.
+Copy the contract address to the UI in the `contracts.config.js`.
 
 ```
-var contractAddress = 'CONTRACT_ADDRESS';
+....
+,{
+  name: "Your network name",
+  address: "0xdb9991ba60a929e8817aa511fe5fb6703bc34797",
+  endpoint: "YOUR ENDPOINT, probably http://localhost:8545"
+}
+...
 ```
 
 You can access the application in `http://localhost:9000`. If you are curious what happens at the blockchain level you can check the docker testrpc logs.
@@ -54,11 +60,16 @@ Then we deploy the contract:
 docker-compose run deploy node deploy.js
 ```
 
-and we copy it in the `index.html` along with the ropsten endpoint:
+and we copy it in the `contracts.config.js` along with the ropsten endpoint:
 
 ```
-var endpoint = "https://ropsten.infura.io"
-var contractAddress = '0xdb9991ba60a929e8817aa511fe5fb6703bc34797';
+...
+,{
+  name: "Testnet Ropsten",
+  address: "0x56f7f47fbcc9cda2966dca64b8a53a8d567f21ac",
+  endpoint: "https://ropsten.infura.io/"
+}
+...
 ```
 
 Since is an static it can be run everywhere.
