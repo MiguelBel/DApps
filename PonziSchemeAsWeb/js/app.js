@@ -12,7 +12,8 @@ var setContract = function(contract){
 
   web3 = new Web3(new Web3.providers.HttpProvider(endpoint));
   contractInstance = getContract(contractAddress, abi);
-
+  contractInstance.blockExplorer = contract.addressBlockExplorer
+  
   setInitialState(contractInstance);
 }
 

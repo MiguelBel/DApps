@@ -10,7 +10,9 @@ var hideLoadingAlert = function() {
 
 var showContractAddress = function(contract) {
   var addressContainer = document.getElementById("address");
-  addressContainer.innerHTML = contract.address;
+
+  var link = '<a href="'+ contract.blockExplorer + contract.address + '" target="_blank">' + contract.address + '</a>'
+  addressContainer.innerHTML = link;
 }
 
 var updateNextAmount = function(contract) {
