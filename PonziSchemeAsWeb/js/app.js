@@ -2,12 +2,6 @@ var setContract = function(contract){
   var endpoint = contract.endpoint;
   var contractAddress = contract.address;
 
-  if (typeof web3 !== 'undefined') {
-     window.web3 = new Web3(web3.currentProvider);
-   } else {
-     console.log('No web3? You should consider trying MetaMask!')
-   }
-
    var networkContainer = document.getElementById('networkName');
    networkContainer.innerHTML = contract.name;
 
@@ -45,18 +39,36 @@ var contribute = function() {
   });
 }
 window.addEventListener('load', function() {
-  web3.version.getNetwork((err, networkId) => {
-    if(networkId > 5) {
-      networkId = 0; // Local development indicated with 0
-    }
+  if (typeof web3 == 'undefined') {
+    alert('No web3? You should consider trying MetaMask!');
+    var mainEthereumNetwork = 1;
 
     var initialContract = contracts.find(function(contract){
-      return contract.networkId == networkId;
+      return contract.networkId == mainEthereumNetwork;
     });
+
+    window.web3 = new Web3(new Web3.providers.HttpProvider(initialContract.endpoint));
 
     setContract(initialContract);
 
     var duplicateButton = document.getElementById("duplicate");
     duplicateButton.addEventListener("click", contribute);
-  });
+  } else {
+    web3.version.getNetwork((err, networkId) => {
+      if(networkId > 5) {
+        networkId = 0; // Local development indicated with 0
+      }
+
+      var initialContract = contracts.find(function(contract){
+        return contract.networkId == networkId;
+      });
+
+      window.web3 = new Web3(web3.currentProvider);
+
+      setContract(initialContract);
+
+      var duplicateButton = document.getElementById("duplicate");
+      duplicateButton.addEventListener("click", contribute);
+    });
+  }
 });

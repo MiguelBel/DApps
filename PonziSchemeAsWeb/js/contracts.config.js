@@ -16,7 +16,8 @@ var contracts = [
   {
     name: "Ethereum Main",
     address: "0xc58492b3b14f658adff566c988029308505f81b5",
-    endpoint: "https://etherscan.io/address/",
+    endpoint: "https://mainnet.infura.io/",
+    addressBlockExplorer: "https://etherscan.io/address/",
     networkId: 1
   }
 ];
