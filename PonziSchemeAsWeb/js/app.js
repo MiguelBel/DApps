@@ -1,31 +1,21 @@
-networkSelector = document.getElementById('networkSelection');
-contracts.forEach(function(contract){
-  option = document.createElement('option');
-  option.value = contract.name;
-  option.text = contract.name;
-  networkSelector.appendChild(option);
-});
-
 var setContract = function(contract){
   var endpoint = contract.endpoint;
   var contractAddress = contract.address;
 
-  web3 = new Web3(new Web3.providers.HttpProvider(endpoint));
+  if (typeof web3 !== 'undefined') {
+     window.web3 = new Web3(web3.currentProvider);
+   } else {
+     console.log('No web3? You should consider trying MetaMask!')
+   }
+
+   var networkContainer = document.getElementById('networkName');
+   networkContainer.innerHTML = contract.name;
+
   contractInstance = getContract(contractAddress, abi);
   contractInstance.blockExplorer = contract.addressBlockExplorer
-  
+
   setInitialState(contractInstance);
 }
-
-networkSelector.addEventListener("change", function(){
-  contractName = networkSelector.value;
-
-  var contractSelected = contracts.find(function(contract){
-    return contract.name == contractName;
-  });
-
-  setContract(contractSelected);
-});
 
 var contractAddress;
 var contractInstance;
@@ -37,24 +27,36 @@ var setInitialState = function(contractInstance) {
 }
 
 var contribute = function() {
-  web3.eth.sendTransaction({
-    from: web3.eth.accounts[0],
-    to: contractInstance.address,
-    value: contractInstance.nextAmount.call()
-  }, function(error, txReference){
-    if(txReference) {
-      showLoadingAlert();
-      getTransactionReceiptMined(txReference).then(function(){
-        hideLoadingAlert();
+  contractInstance.nextAmount.call(function(error, nextAmount){
+    web3.eth.sendTransaction({
+      from: web3.eth.accounts[0],
+      to: contractInstance.address,
+      value: nextAmount
+    }, function(error, txReference){
+      if(txReference) {
+        showLoadingAlert();
+        getTransactionReceiptMined(txReference).then(function(){
+          hideLoadingAlert();
 
-        updateNextAmount(contractInstance);
-      });
-    }
+          updateNextAmount(contractInstance);
+        });
+      }
+    });
   });
 }
+window.addEventListener('load', function() {
+  web3.version.getNetwork((err, networkId) => {
+    if(networkId > 5) {
+      networkId = 0; // Local development indicated with 0
+    }
 
-var initialContract = contracts[0];
-setContract(initialContract);
+    var initialContract = contracts.find(function(contract){
+      return contract.networkId == networkId;
+    });
 
-var duplicateButton = document.getElementById("duplicate");
-duplicateButton.addEventListener("click", contribute);
+    setContract(initialContract);
+
+    var duplicateButton = document.getElementById("duplicate");
+    duplicateButton.addEventListener("click", contribute);
+  });
+});

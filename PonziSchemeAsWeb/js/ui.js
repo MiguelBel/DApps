@@ -16,8 +16,9 @@ var showContractAddress = function(contract) {
 }
 
 var updateNextAmount = function(contract) {
-  var amountInWei = contract.nextAmount.call();
-  var nextAmount = web3.fromWei(amountInWei, "ether");
-  var nextAmountContainer = document.getElementById("nextAmount");
-  nextAmountContainer.innerHTML = nextAmount;
+  var amountInWei = contract.nextAmount.call(function(error, amount){
+    var nextAmount = web3.fromWei(amount, "ether");
+    var nextAmountContainer = document.getElementById("nextAmount");
+    nextAmountContainer.innerHTML = nextAmount;
+  });
 }
