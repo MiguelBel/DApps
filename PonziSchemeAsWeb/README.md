@@ -1,5 +1,7 @@
 ## Ponzi Scheme As Web
 
+You can find the project here: [ETHPonzi](http://www.ethponzi.com)
+
 ### Context
 
 Provide a web interface for the [Ponzi Scheme Contract](https://github.com/MiguelBel/DApps/tree/master/PonziScheme)
@@ -36,9 +38,13 @@ Copy the contract address to the UI in the `contracts.config.js`.
   name: "Your network name",
   address: "0xdb9991ba60a929e8817aa511fe5fb6703bc34797",
   endpoint: "YOUR ENDPOINT, probably http://localhost:8545"
+  addressBlockExplorer: "The link to the address",
+  networkId: 0
 }
 ...
 ```
+
+Use `networkId` as `0` for use a development network.
 
 You can access the application in `http://localhost:9000`. If you are curious what happens at the blockchain level you can check the docker testrpc logs.
 
@@ -64,15 +70,19 @@ and we copy it in the `contracts.config.js` along with the ropsten endpoint:
 
 ```
 ...
-,{
-  name: "Testnet Ropsten",
-  address: "0x56f7f47fbcc9cda2966dca64b8a53a8d567f21ac",
-  endpoint: "https://ropsten.infura.io/"
-}
+  ,{
+    name: "Testnet Ropsten",
+    address: "0x56f7f47fbcc9cda2966dca64b8a53a8d567f21ac",
+    endpoint: "https://ropsten.infura.io/",
+    addressBlockExplorer: "https://ropsten.etherscan.io/address/",
+    networkId: 3
+  }
 ...
 ```
 
 Since is an static it can be run everywhere.
+
+`networkId` is the web3 output of `getNetwork` method.
 
 ### Main Ethereum Network setup
 

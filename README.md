@@ -8,3 +8,4 @@ The projects I've done/doing/will do:
 | Escrow             | Done    |
 | ChampionsLeagueBet | Pending |
 | PonziScheme        | Done    |
+| PonziSchemeAsWeb   | Done    |
