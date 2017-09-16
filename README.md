@@ -9,3 +9,4 @@ The projects I've done/doing/will do:
 | ChampionsLeagueBet | Pending |
 | PonziScheme        | Done    |
 | PonziSchemeAsWeb   | Done    |
+| Blog   | Work In Progress    |
