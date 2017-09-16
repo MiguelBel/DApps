@@ -29,10 +29,8 @@ class ShowPosts {
     var posts = [];
 
     var title = blog.title.call();
-    var titleContainer = document.querySelector("#titleContent");
-    titleContainer.innerText = title;
+    setTitle(title);
     loadingState.title = false;
-    checkLoading();
 
     for(var reference = 0; reference < numberOfPosts; reference++) {
       var post = blog.getPost(reference)

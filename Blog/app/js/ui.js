@@ -21,3 +21,10 @@ var showPublishPostForm = function() {
 var showBlogContent = function() {
   document.querySelector(".content").style = 'display: block;'
 }
+
+var setTitle = function(title) {
+  var titleContainer = document.querySelector("#titleContent");
+
+  titleContainer.innerText = title;
+  document.title = title;
+}
