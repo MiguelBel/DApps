@@ -27,3 +27,21 @@ ipfs:
     - 5002:8080
   volumes:
     - ./ipfs:/ipfs
+
+chromedriver:
+  image: selenium/standalone-chrome
+  links:
+    - testrpc
+    - ipfs
+    - app
+  ports:
+    - "4444:4444"
+
+test:
+  build: ./test
+  links:
+    - chromedriver
+  volumes:
+    - './test/:/test'
+    - '/test/node_modules'
+  command: sleep infinity

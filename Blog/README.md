@@ -59,3 +59,35 @@ Number of posts: 1
 ```
 
 You should be able to see the post posted inyour blog.
+
+## How to run the tests?
+
+### Application tests
+
+You have to run the seed file (remember to run it everytime after restarting the docker):
+
+```
+./test/seed.sh
+```
+
+And run the command which run the tests:
+
+```
+docker-compose exec test npm test
+```
+
+### Contract tests
+
+You have to run the tests with this command:
+
+```
+docker-compose run contracts npm test
+```
+
+## How can I use the app locally?
+
+The app runs on the port 5005 (e.g: `http://localhost:5005`). If you want to use the app add this configuration to the `/etc/hosts` file:
+
+```
+127.0.0.1 testrpc
+```
