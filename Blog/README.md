@@ -84,6 +84,14 @@ You have to run the tests with this command:
 docker-compose run contracts npm test
 ```
 
+### All tests
+
+You can run all the tests executing the script:
+
+```
+./tests.sh
+```
+
 ## How can I use the app locally?
 
 The app runs on the port 5005 (e.g: `http://localhost:5005`). If you want to use the app add this configuration to the `/etc/hosts` file:
