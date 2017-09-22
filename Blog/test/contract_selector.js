@@ -45,7 +45,7 @@ var App = {
   goToBlog: function(browser) {
     browser.
       click("#goToContract").
-      pause(1000)
+      pause(3000)
   },
 
   expectToHaveTitle: function(title, browser) {
